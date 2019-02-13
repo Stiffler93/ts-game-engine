@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GameLoopService} from '../controls/game-loop.service';
 import {Observable, Subscription} from 'rxjs';
 
@@ -9,9 +9,9 @@ import {Observable, Subscription} from 'rxjs';
 })
 export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('Container') CONTAINER: ElementRef;
+  private CONTAINER: HTMLCanvasElement;
   @Input('autoStart') autoStart: boolean;
-  @Input('active') running: Observable<boolean>;
+  @Input('gameActive') gameActive: Observable<boolean>;
 
   private subscriptions: Subscription[] = [];
 
@@ -19,7 +19,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
-    const subscription: Subscription = this.running.subscribe(active => {
+    const subscription: Subscription = this.gameActive.subscribe(active => {
       if (active) {
         this.GAME_LOOP.resume();
       } else {
@@ -31,6 +31,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
+    this.CONTAINER = <HTMLCanvasElement> document.getElementById('Container');
+    this.GAME_LOOP.setCanvas(<HTMLCanvasElement>this.CONTAINER);
+
     if (this.autoStart) {
       this.GAME_LOOP.start();
     }
