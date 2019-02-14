@@ -2,4 +2,6 @@
   <button (click)="play()">Play</button>
   <button (click)="pause()">Pause</button>
 </div>
-<app-game-container [autoStart]="false" [gameActive]="gameActive"></app-game-container>
+<div id="gameDiv">
+  <app-game-container [autoStart]="false" [gameActive]="gameActive"></app-game-container>
+</div>

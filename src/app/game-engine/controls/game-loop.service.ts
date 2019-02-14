@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {GameSettingsService} from './game-settings.service';
 import {interval, Observable, Subscription} from 'rxjs';
 import {Error} from 'tslint/lib/error';
+import {GameEntitiesService} from './game-entities.service';
+import {Entity} from '../elements/Entity';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class GameLoopService {
   private CANVAS: HTMLCanvasElement;
   private CONTEXT: CanvasRenderingContext2D;
 
-  constructor(private settings: GameSettingsService) {
+  constructor(private settings: GameSettingsService, private entities: GameEntitiesService) {
     this.frame = interval(1000 / this.settings.fps);
   }
 
@@ -63,11 +65,12 @@ export class GameLoopService {
   }
 
   private update(): void {
-    console.log('update()');
     this.CONTEXT.clearRect(0, 0, this.CANVAS.width, this.CANVAS.height);
-    this.CONTEXT.rect(100, 100, 200, 200);
-    this.CONTEXT.strokeStyle = '#ffffff';
-    this.CONTEXT.stroke();
+
+    this.CONTEXT.beginPath();
+    this.entities.getAllEntities().forEach((entity: Entity) => entity.update());
+    this.entities.getAllEntities().forEach((entity: Entity) => entity.draw(this.CONTEXT));
+    this.CONTEXT.closePath();
   }
 
   private setupGame(): void {

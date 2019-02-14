@@ -12,6 +12,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private CONTAINER: HTMLCanvasElement;
   @Input('autoStart') autoStart: boolean;
   @Input('gameActive') gameActive: Observable<boolean>;
+  @Input('horizontalPixels') horizontalPixels: number = 16 * 20;
+  @Input('verticalPixels') verticalPixels: number = 16 * 14;
 
   private subscriptions: Subscription[] = [];
 
@@ -32,6 +34,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit() {
     this.CONTAINER = <HTMLCanvasElement> document.getElementById('Container');
+    this.CONTAINER.width = this.horizontalPixels;
+    this.CONTAINER.height = this.verticalPixels;
     this.GAME_LOOP.setCanvas(<HTMLCanvasElement>this.CONTAINER);
 
     if (this.autoStart) {
