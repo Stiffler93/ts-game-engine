@@ -5,8 +5,14 @@ import {Updatable} from './Updatable';
 
 export class Entity /*implements Drawable, Updatable, Movable*/ {
 
-  constructor(private position: Point, private drawable: Drawable, private updatable?: Updatable,
-              private movable?: Movable, private visible: boolean = true) {
+  constructor(private position: Point, private visible: boolean = true,
+              private drawable: Drawable, private updatable?: Updatable, public movable?: Movable) {
+    this.drawable.forEntity(this);
+
+    if (this.movable) {
+      this.movable.forEntity(this);
+    }
+
     if (this.updatable) {
       this.updatable.forEntity(this);
     }
@@ -20,26 +26,18 @@ export class Entity /*implements Drawable, Updatable, Movable*/ {
     this.visible = visiblity;
   }
 
+  public getPosition(): Point {
+    return this.position;
+  }
+
+  public setPosition(position: Point): void {
+    this.position = position;
+  }
+
   public draw(context: CanvasRenderingContext2D): void {
     if (this.isVisible()) {
-      this.drawable.draw(context, this.position);
+      this.drawable.draw(context);
     }
-  }
-
-  public move(x: number, y: number): Point {
-    if (this.movable) {
-      this.position = this.movable.move(this.position, x, y);
-    }
-
-    return this.position;
-  }
-
-  public moveTo(x: number, y: number): Point {
-    if (this.movable) {
-      this.position = this.movable.moveTo(x, y);
-    }
-
-    return this.position;
   }
 
   public update(): void {

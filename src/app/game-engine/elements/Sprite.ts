@@ -1,18 +1,19 @@
 import {Drawable} from './Drawable';
 import {Point} from './util/Point';
+import {Entity} from './Entity';
 
 type ValidSprite = () => boolean;
 type SpriteGetter = () => ImageBitmap;
 
 export interface Sprite {
-  readonly sprite: ImageBitmap;
   isValid: ValidSprite;
   getSprite: SpriteGetter;
 }
 
 export class BaseSprite implements Sprite, Drawable {
 
-  sprite: ImageBitmap;
+  private sprite: ImageBitmap;
+  private entity: Entity;
 
   constructor(private imgSource: string, {x = 0, y = 0, width = 16, height = 16}:
     { x: number, y: number, width: number, height: number }) {
@@ -31,8 +32,12 @@ export class BaseSprite implements Sprite, Drawable {
     return this.sprite;
   }
 
-  public draw(context: CanvasRenderingContext2D, position: Point) {
-    context.drawImage(this.sprite, position.x, position.y);
+  public draw(context: CanvasRenderingContext2D) {
+    context.drawImage(this.sprite, this.entity.getPosition().x, this.entity.getPosition().y);
+  }
+
+  public forEntity(entity: Entity): void {
+    this.entity = entity;
   }
 }
 
