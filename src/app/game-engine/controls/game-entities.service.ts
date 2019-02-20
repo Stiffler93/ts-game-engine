@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../elements/Entity';
 import {Point} from '../elements/util/Point';
-import {Drawable} from '../elements/Drawable';
-import {Updatable} from '../elements/Updatable';
-import {Movable} from '../elements/Movable';
 import {Rectangle} from '../elements/Rectangle';
 import {PlainUpdatable} from '../elements/PlainUpdatable';
 import {PlainMovable} from '../elements/PlainMovable';
+import {EntityStyle} from '../elements/util/EntityStyle';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,9 @@ export class GameEntitiesService {
   private entities: Entity[] = [];
 
   constructor() {
-    const e1: Entity = new Entity(new Point(100, 100), true, new Rectangle(100, 80), new PlainUpdatable(), new PlainMovable());
+    const p: Point = new Point(77, 23);
+    console.log({'Point': p});
+    const e1: Entity = new Entity(p, true, new Rectangle(16, 16, new EntityStyle({})), new PlainUpdatable(), new PlainMovable());
     this.entities.push(e1);
   }
 

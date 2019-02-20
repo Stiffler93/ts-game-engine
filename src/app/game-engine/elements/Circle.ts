@@ -3,11 +3,11 @@ import {Entity} from './Entity';
 import {EntityStyle} from './util/EntityStyle';
 import {Point} from './util/Point';
 
-export class Rectangle implements Drawable {
+export class Circle implements Drawable {
 
   private entity: Entity;
 
-  constructor(private width: number, private height: number, private style?: EntityStyle) {
+  constructor(private radius: number, private style?: EntityStyle) {
   }
 
   public draw(context: CanvasRenderingContext2D): void {
@@ -15,8 +15,7 @@ export class Rectangle implements Drawable {
       this.style.applyStyles(context);
     }
     const curPos = this.transformCenterToTopLeft(this.entity.getPosition());
-    console.log({'draw rect at': curPos});
-    context.rect(curPos.x, curPos.y, this.width, this.height);
+    context.arc(curPos.x, curPos.y, this.radius * 2, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
   }
@@ -26,23 +25,22 @@ export class Rectangle implements Drawable {
   }
 
   private transformCenterToTopLeft(origin: Point): Point {
-    console.log({'origin': origin});
-    return new Point(origin.x - this.width / 2, origin.y - this.height / 2);
+    return new Point(origin.x - this.radius, origin.y - this.radius);
   }
 
   public bottomBorder(): number {
-    return this.entity.getPosition().y + this.height / 2;
+    return this.entity.getPosition().y + this.radius;
   }
 
   public leftBorder(): number {
-    return this.entity.getPosition().x - this.width / 2;
+    return this.entity.getPosition().x - this.radius;
   }
 
   public rightBorder(): number {
-    return this.entity.getPosition().x + this.width / 2;
+    return this.entity.getPosition().x + this.radius;
   }
 
   public topBorder(): number {
-    return this.entity.getPosition().y - this.height / 2;
+    return this.entity.getPosition().y - this.radius;
   }
 }

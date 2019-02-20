@@ -7,6 +7,8 @@ export class Entity /*implements Drawable, Updatable, Movable*/ {
 
   constructor(private position: Point, private visible: boolean = true,
               private drawable: Drawable, private updatable?: Updatable, public movable?: Movable) {
+    console.log({'Create Entity at': position});
+
     this.drawable.forEntity(this);
 
     if (this.movable) {
@@ -31,6 +33,8 @@ export class Entity /*implements Drawable, Updatable, Movable*/ {
   }
 
   public setPosition(position: Point): void {
+    console.log({'Move Entity to': position});
+
     this.position = position;
   }
 

@@ -24,15 +24,15 @@ export class PlainUpdatable implements Updatable {
     }
 
     const curPos = this.entity.getPosition();
-    if (curPos.x > 400) {
+    if (curPos.x > 150) {
       this.velocity.x = -1;
-    } else if (curPos.x < 100) {
+    } else if (curPos.x < 75) {
       this.velocity.x = 1;
     }
 
-    if (curPos.y > 530) {
+    if (curPos.y > 209) {
       curPos.y = -1;
-    } else if (curPos.y < 170) {
+    } else if (curPos.y < 101) {
       curPos.y = 1;
     }
 
