@@ -1,6 +1,10 @@
 export class Point {
 
   constructor(public x: number, public y: number) {
-    // console.log({'create Point': undefined, 'x': x, 'y': y});
+  }
+
+  public add(x: number, y: number) {
+    this.x += x;
+    this.y += y;
   }
 }

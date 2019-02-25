@@ -18,10 +18,7 @@ export class PlainUpdatable implements Updatable {
     this.move();
   }
 
-  private move(): boolean {
-    if (!this.entity.movable) {
-      return false;
-    }
+  private move(): void {
 
     const curPos = this.entity.getPosition();
     if (curPos.x > 150) {
@@ -31,11 +28,11 @@ export class PlainUpdatable implements Updatable {
     }
 
     if (curPos.y > 209) {
-      curPos.y = -1;
+      this.velocity.y = -1;
     } else if (curPos.y < 101) {
-      curPos.y = 1;
+      this.velocity.y = 1;
     }
 
-    this.entity.movable.move(this.velocity.x, this.velocity.y);
+    this.entity.move(this.velocity.x, this.velocity.y);
   }
 }

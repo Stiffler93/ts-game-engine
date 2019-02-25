@@ -55,21 +55,5 @@ export class BaseSprite implements Sprite, Drawable {
   private transformCenterToTopLeft(origin: Point): Point {
     return new Point(origin.x - this.width / 2, origin.y - this.height / 2);
   }
-
-  public bottomBorder(): number {
-    return this.entity.getPosition().y + this.height / 2;
-  }
-
-  public leftBorder(): number {
-    return this.entity.getPosition().x - this.width / 2;
-  }
-
-  public rightBorder(): number {
-    return this.entity.getPosition().x + this.width / 2;
-  }
-
-  public topBorder(): number {
-    return this.entity.getPosition().y - this.height / 2;
-  }
 }
 

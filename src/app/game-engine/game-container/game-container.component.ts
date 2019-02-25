@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {GameLoopService} from '../controls/game-loop.service';
 import {Observable, Subscription} from 'rxjs';
 
@@ -10,10 +10,10 @@ import {Observable, Subscription} from 'rxjs';
 export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private CONTAINER: HTMLCanvasElement;
-  @Input('autoStart') autoStart: boolean;
-  @Input('gameActive') gameActive: Observable<boolean>;
-  @Input('horizontalPixels') horizontalPixels: number = 16 * 20;
-  @Input('verticalPixels') verticalPixels: number = 16 * 14;
+  @Input() autoStart: boolean;
+  @Input() gameActive: Observable<boolean>;
+  @Input() horizontalPixels: number = 16 * 20;
+  @Input() verticalPixels: number = 16 * 14;
 
   private subscriptions: Subscription[] = [];
 

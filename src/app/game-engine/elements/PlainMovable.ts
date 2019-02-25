@@ -15,14 +15,10 @@ export class PlainMovable implements Movable {
 
   public move(x: number, y: number): Point {
     const curPos: Point = this.entity.getPosition();
-    const newPos: Point = new Point(curPos.x + x, curPos.y + y);
-    this.entity.setPosition(newPos);
-    return newPos;
+    return new Point(curPos.x + x, curPos.y + y);
   }
 
   public moveTo(x: number, y: number): Point {
-    const newPos: Point = new Point(x, y);
-    this.entity.setPosition(newPos);
-    return newPos;
+    return new Point(x, y);
   }
 }

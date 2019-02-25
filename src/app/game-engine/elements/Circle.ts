@@ -27,20 +27,4 @@ export class Circle implements Drawable {
   private transformCenterToTopLeft(origin: Point): Point {
     return new Point(origin.x - this.radius, origin.y - this.radius);
   }
-
-  public bottomBorder(): number {
-    return this.entity.getPosition().y + this.radius;
-  }
-
-  public leftBorder(): number {
-    return this.entity.getPosition().x - this.radius;
-  }
-
-  public rightBorder(): number {
-    return this.entity.getPosition().x + this.radius;
-  }
-
-  public topBorder(): number {
-    return this.entity.getPosition().y - this.radius;
-  }
 }

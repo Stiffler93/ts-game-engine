@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { GameSettingsService } from './game-settings.service';
+import {GameSettingsService} from './game-settings.service';
 
 describe('GameSettingsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

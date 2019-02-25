@@ -6,7 +6,7 @@ import {Updatable} from './Updatable';
 export class Entity /*implements Drawable, Updatable, Movable*/ {
 
   constructor(private position: Point, private visible: boolean = true,
-              private drawable: Drawable, private updatable?: Updatable, public movable?: Movable) {
+              private drawable: Drawable, private updatable?: Updatable, private movable?: Movable) {
     console.log({'Create Entity at': position});
 
     this.drawable.forEntity(this);
@@ -29,13 +29,20 @@ export class Entity /*implements Drawable, Updatable, Movable*/ {
   }
 
   public getPosition(): Point {
+    console.log({'get Position': this.position});
     return this.position;
   }
 
-  public setPosition(position: Point): void {
-    console.log({'Move Entity to': position});
+  public move(x: number, y: number) {
+    if (this.movable) {
+      this.position = this.movable.move(x, y);
+    }
+  }
 
-    this.position = position;
+  public moveTo(x: number, y: number) {
+    if (this.movable) {
+      this.position = this.movable.moveTo(x, y);
+    }
   }
 
   public draw(context: CanvasRenderingContext2D): void {
