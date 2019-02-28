@@ -1,11 +1,11 @@
 {
-  "num-tiles-horizontally": 20,
-  "num_tiles-vertically": 14,
-  "tile-width": 16,
-  "tile-height": 16,
-  "entitiesFolder": "~/assets/game/entities",
-  "tilesFolder": "~/assets/game/tiles",
-  "levelsFolder": "~/assets/game/levels",
-  "menusFolder": "~/assets/game/menus",
+  "numTilesHorizontally": 20,
+  "numTilesVertically": 14,
+  "tileWidth": 16,
+  "tileHeight": 16,
+  "entitiesFolder": "assets/game/entities",
+  "tilesFolder": "assets/game/tiles",
+  "levelsFolder": "assets/game/levels",
+  "menusFolder": "assets/game/menus",
   "startScreen": "LEVEL:1"
 }

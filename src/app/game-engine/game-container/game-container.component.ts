@@ -1,6 +1,8 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {GameLoopService} from '../controls/game-loop.service';
 import {Observable, Subscription} from 'rxjs';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {GameBuilder} from '../creation/GameBuilder';
 
 @Component({
   selector: 'app-game-container',
@@ -17,7 +19,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private GAME_LOOP: GameLoopService) {
+  constructor(private GAME_LOOP: GameLoopService, private http: HttpClient,
+              @Inject('GameDefinitionsFile') private definitionsFile: string) {
   }
 
   ngOnInit() {
@@ -38,10 +41,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.CONTAINER.height = this.verticalPixels;
     this.GAME_LOOP.setCanvas(<HTMLCanvasElement>this.CONTAINER);
 
-    if (this.autoStart) {
-      this.GAME_LOOP.start();
+    const gameBuilder: GameBuilder = new GameBuilder(this.http, this.definitionsFile);
+    gameBuilder.build();
+
+      if (this.autoStart) {
+        this.GAME_LOOP.start();
+      }
     }
-  }
 
   ngOnDestroy(): void {
     this.GAME_LOOP.stop();

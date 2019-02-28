@@ -10,7 +10,7 @@ import {GameEngineModule} from './game-engine/game-engine.module';
   ],
   imports: [
     BrowserModule,
-    GameEngineModule
+    GameEngineModule.forRoot('assets/game/Game.json')
   ],
   providers: [],
   bootstrap: [AppComponent]
