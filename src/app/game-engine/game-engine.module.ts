@@ -11,4 +11,4 @@ import {GameContainerComponent} from './game-container/game-container.component'
     GameContainerComponent
   ]
 })
-export class GameEngineModule { }
+export class GameEngineModule {}

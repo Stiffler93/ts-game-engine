@@ -5,19 +5,31 @@ import {Rectangle} from '../elements/Rectangle';
 import {PlainUpdatable} from '../elements/PlainUpdatable';
 import {PlainMovable} from '../elements/PlainMovable';
 import {EntityStyle} from '../elements/util/EntityStyle';
+import {Movable} from '../elements/Movable';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameEntitiesService {
 
+  private static SERVICE: GameEntitiesService;
+
   private entities: Entity[] = [];
 
   constructor() {
-    const p: Point = new Point(77, 23);
-    console.log({'Point': p});
-    const e1: Entity = new Entity(p, true, new Rectangle(16, 16, new EntityStyle({})), new PlainUpdatable(), new PlainMovable());
+    const movable: Movable = new PlainMovable();
+    //movable.forGameGrid();
+    GameEntitiesService.SERVICE = this;
+    const e1: Entity = new Entity(new Point(77, 23), true,
+      new Rectangle(16, 16, new EntityStyle({})), new PlainUpdatable(), new PlainMovable());
     this.entities.push(e1);
+    const e2: Entity = new Entity(new Point(30, 100), true,
+      new Rectangle(16, 16, new EntityStyle({})), new PlainUpdatable(), new PlainMovable());
+    this.entities.push(e2);
+  }
+
+  public static getInstance(): GameEntitiesService {
+    return GameEntitiesService.SERVICE;
   }
 
   public addEntity(entity: Entity): void {

@@ -2,6 +2,10 @@ import {Updatable} from './Updatable';
 import {Entity} from './Entity';
 import {Point} from './util/Point';
 
+/*
+ * This class is responsible to calculate not only the updates for the current
+ * entity, but also the updates that needs to be done to other objects/services, etc.
+ */
 export class PlainUpdatable implements Updatable {
 
   private entity: Entity;
@@ -34,5 +38,9 @@ export class PlainUpdatable implements Updatable {
     }
 
     this.entity.move(this.velocity.x, this.velocity.y);
+  }
+
+  private checkIntersections(): void {
+
   }
 }
