@@ -2,6 +2,6 @@
   "identifier": "B",
   "width": 16,
   "height": 16,
-  "bg-color": "#000000",
+  "bgColor": "#000000",
   "sprite": "none"
 }

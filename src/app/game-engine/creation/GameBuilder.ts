@@ -12,7 +12,10 @@ export class GameBuilder {
     //
     //   })
     // ).subscribe(r => true);
-    this.http.get(this.definitionsFile).subscribe((result: Game) => console.log({'Game': result}));
+    this.http.get(this.definitionsFile).subscribe((game: Game) => {
+      console.log({'Game': game});
+      game.init();
+    });
     return of(true);
   }
 }

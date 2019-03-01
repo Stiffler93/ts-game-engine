@@ -1,6 +1,6 @@
 {
-  "numTilesHorizontally": 20,
-  "numTilesVertically": 14,
+  "numHorizontalTiles": 20,
+  "numVerticalTiles": 14,
   "tileWidth": 16,
   "tileHeight": 16,
   "entitiesFolder": "assets/game/entities",
