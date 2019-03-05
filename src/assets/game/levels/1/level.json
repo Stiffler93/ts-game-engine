@@ -1,0 +1,5 @@
+{
+  "identifier": "1",
+  "background": "assets/game/levels/1/background.def",
+  "foreground": "assets/game/levels/1/foreground.def"
+}

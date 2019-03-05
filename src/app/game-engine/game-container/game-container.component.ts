@@ -1,8 +1,9 @@
 import {AfterViewInit, Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {GameLoopService} from '../controls/game-loop.service';
 import {Observable, Subscription} from 'rxjs';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {GameBuilder} from '../creation/GameBuilder';
+import {HttpClient} from '@angular/common/http';
+import {GameParser} from '../creation/GameParser';
+import {GameImpl} from '../creation/model/Creation';
 
 @Component({
   selector: 'app-game-container',
@@ -14,8 +15,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private CONTAINER: HTMLCanvasElement;
   @Input() autoStart: boolean;
   @Input() gameActive: Observable<boolean>;
-  @Input() horizontalPixels: number = 16 * 20;
-  @Input() verticalPixels: number = 16 * 14;
+  private horizontalPixels: number = 16 * 20;
+  private verticalPixels: number = 16 * 14;
 
   private subscriptions: Subscription[] = [];
 
@@ -41,13 +42,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.CONTAINER.height = this.verticalPixels;
     this.GAME_LOOP.setCanvas(<HTMLCanvasElement>this.CONTAINER);
 
-    const gameBuilder: GameBuilder = new GameBuilder(this.http, this.definitionsFile);
-    gameBuilder.build();
+    const gameParser: GameParser = new GameParser(this.definitionsFile);
+    gameParser.parse(this.http).subscribe((game: GameImpl) => console.log({'Parsed GameImpl': game}));
 
-      if (this.autoStart) {
-        this.GAME_LOOP.start();
-      }
+    if (this.autoStart) {
+      this.GAME_LOOP.start();
     }
+  }
 
   ngOnDestroy(): void {
     this.GAME_LOOP.stop();

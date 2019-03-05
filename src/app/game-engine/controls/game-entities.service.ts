@@ -18,7 +18,6 @@ export class GameEntitiesService {
 
   constructor() {
     const movable: Movable = new PlainMovable();
-    //movable.forGameGrid();
     GameEntitiesService.SERVICE = this;
     const e1: Entity = new Entity(new Point(77, 23), true,
       new Rectangle(16, 16, new EntityStyle({})), new PlainUpdatable(), new PlainMovable());

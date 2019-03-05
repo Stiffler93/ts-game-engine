@@ -3,9 +3,15 @@
   "numVerticalTiles": 14,
   "tileWidth": 16,
   "tileHeight": 16,
-  "entitiesFolder": "assets/game/entities",
-  "tilesFolder": "assets/game/tiles",
-  "levelsFolder": "assets/game/levels",
-  "menusFolder": "assets/game/menus",
-  "startScreen": "LEVEL:1"
+  "entities": [
+    "assets/game/entities/rect.json"
+  ],
+  "tiles": [
+    "assets/game/tiles/Black.json",
+    "assets/game/tiles/White.json",
+    "assets/game/tiles/Blue.json"
+  ],
+  "levels": [
+    "assets/game/levels/1/level.json"
+  ]
 }
