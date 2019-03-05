@@ -1,6 +1,6 @@
-import {combineLatest, from, Observable, of} from 'rxjs';
+import {combineLatest, forkJoin, from, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {map, mergeMap} from 'rxjs/operators';
+import {flatMap, map, mergeMap, tap} from 'rxjs/operators';
 
 export interface Entity {
   identifier: string;
@@ -34,48 +34,69 @@ export interface Game {
   levels: string[];
 }
 
+export class LevelImpl {
+
+  private background: Tile[][] = [];
+  private foreground: Tile[][] = [];
+
+  constructor(private settings: Level) {
+  }
+
+  public init(http: HttpClient): Observable<LevelImpl> {
+    return forkJoin(this.loadTiles(http, this.settings.background), this.loadTiles(http, this.settings.foreground))
+      .pipe(
+        flatMap(results => {
+          this.background = results[0];
+          this.foreground = results[1];
+          return of(<LevelImpl>this);
+        })
+      );
+  }
+
+  public loadTiles(http: HttpClient, file: string): Observable<Tile[][]> {
+    // http.get(file, {responseType: 'text'}).pipe(
+    //   map((defs: string) => defs.split('\n')),
+    //   map((rows: string[]) => {
+    //     rows.forEach(row => row.split(''));
+    //     return rows;
+    //   }),
+    //   map()
+    // )
+    return of<Tile[][]>([]);
+  }
+
+}
+
 export class GameImpl {
-  private numHorizontalTiles: number;
-  private numVerticalTiles: number;
-  private tileWidth: number;
-  private tileHeight: number;
+
+  private entities: Entity[] = [];
+  private levels: Level[] = [];
+  private tiles: Tile[] = [];
 
   constructor(private settings: Game) {
-    this.numHorizontalTiles = settings.numHorizontalTiles;
-    this.numVerticalTiles = settings.numVerticalTiles;
-    this.tileWidth = settings.tileWidth;
-    this.tileHeight = settings.tileHeight;
   }
 
   public loadResources(http: HttpClient): Observable<GameImpl> {
-    return combineLatest(of(this), this.loadTiles(http), this.loadEntities(), this.loadLevels())
+    return forkJoin(this.loadTiles(http), this.loadEntities(http), this.loadLevels(http))
       .pipe(
-        map(results => {
-          console.log({'Loaded Resources': results});
-          return results[0];
+        flatMap(results => {
+          this.tiles = results[0];
+          this.entities = results[1];
+          this.levels = results[2];
+          return of(<GameImpl>this);
         })
       );
   }
 
   private loadTiles(http: HttpClient): Observable<Tile[]> {
-    from(this.settings.tiles)
-      .pipe(
-        mergeMap((tileS: string) => {
-          console.log({'Load Tile': tileS});
-          return tileS;
-        })
-      );
-    const tiles: Tile[] = [];
-    return of(tiles);
+    return forkJoin(this.settings.tiles.map((value: string) => http.get<Tile>(value)));
   }
 
-  private loadEntities(): Observable<Entity[]> {
-    const entities: Entity[] = [];
-    return of(entities);
+  private loadEntities(http: HttpClient): Observable<Entity[]> {
+    return forkJoin(this.settings.entities.map((value: string) => http.get<Entity>(value)));
   }
 
-  private loadLevels(): Observable<Level[]> {
-    const levels: Level[] = [];
-    return of(levels);
+  private loadLevels(http: HttpClient): Observable<Level[]> {
+    return forkJoin(this.settings.levels.map((value: string) => http.get<Level>(value)));
   }
 }
