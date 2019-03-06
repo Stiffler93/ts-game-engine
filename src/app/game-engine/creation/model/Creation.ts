@@ -1,6 +1,8 @@
-import {combineLatest, forkJoin, from, Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {flatMap, map, tap} from 'rxjs/operators';
+import {View} from '../../view/View';
+import {TileFactory} from './TileFactory';
 
 export interface Entity {
   identifier: string;
@@ -32,14 +34,15 @@ export interface Game {
   entities: string[];
   tiles: string[];
   levels: string[];
+  entryPoint: string;
 }
 
-export class LevelImpl {
+export class LevelImpl implements View {
 
   private background: Tile[][] = [];
   private foreground: Tile[][] = [];
 
-  constructor(private settings: Level) {
+  constructor(private settings: Level, private gameImpl: GameImpl) {
   }
 
   public init(http: HttpClient): Observable<LevelImpl> {
@@ -53,25 +56,54 @@ export class LevelImpl {
       );
   }
 
-  public loadTiles(http: HttpClient, file: string): Observable<Tile[][]> {
-    // http.get(file, {responseType: 'text'}).pipe(
-    //   map((defs: string) => defs.split('\n')),
-    //   map((rows: string[]) => {
-    //     rows.forEach(row => row.split(''));
-    //     return rows;
-    //   }),
-    //   map()
-    // )
-    return of<Tile[][]>([]);
+  private loadTiles(http: HttpClient, file: string): Observable<Tile[][]> {
+    return http.get(file, {responseType: 'text'}).pipe(
+      map((defs: string) => defs.split('\n')),
+      map((rows: string[]) => {
+        const array: string[][] = [];
+        rows.forEach((row, index) => {
+          if (row !== '') {
+            const arr: string[] = row.split('');
+            arr.pop();
+            array[index] = arr;
+          }
+        });
+        return array;
+      }),
+      map((charRows: string[][]) => charRows.map((charRow: string[]) => {
+        return charRow.map((identifier: string) => this.gameImpl.getTile(identifier));
+      }))
+    );
   }
 
+  public getIdentifier(): string {
+    return this.settings.identifier;
+  }
+
+  public render(context: CanvasRenderingContext2D): void {
+    this.background.forEach((row: Tile[], indexY: number) =>
+      row.forEach((tile: Tile, indexX: number) => {
+        if (tile) {
+          TileFactory.drawTile(context, tile, indexX, indexY);
+        }
+      })
+    );
+    this.foreground.forEach((row: Tile[], indexY: number) =>
+      row.forEach((tile: Tile, indexX: number) => {
+        if (tile) {
+          TileFactory.drawTile(context, tile, indexX, indexY);
+        }
+      })
+    );
+  }
 }
 
 export class GameImpl {
 
   private entities: Entity[] = [];
-  private levels: Level[] = [];
+  private levels: LevelImpl[] = [];
   private tiles: Tile[] = [];
+  private currentView: View;
 
   constructor(private settings: Game) {
   }
@@ -82,9 +114,13 @@ export class GameImpl {
         flatMap(results => {
           this.tiles = results[0];
           this.entities = results[1];
-          this.levels = results[2];
+          return forkJoin(results[2].map((level: Level) => new LevelImpl(level, this).init(http)));
+        }),
+        flatMap((levels: LevelImpl[]) => {
+          this.levels = levels;
           return of(<GameImpl>this);
-        })
+        }),
+        tap(() => this.initEntryView())
       );
   }
 
@@ -98,5 +134,39 @@ export class GameImpl {
 
   private loadLevels(http: HttpClient): Observable<Level[]> {
     return forkJoin(this.settings.levels.map((value: string) => http.get<Level>(value)));
+  }
+
+  private initEntryView(): void {
+    const entryPoint: string = this.settings.entryPoint;
+    if (entryPoint.indexOf('LEVEL') === 0) {
+      const indexOfColon = entryPoint.indexOf(':');
+      const length = entryPoint.length;
+      const identifier: string = entryPoint.substr(indexOfColon + 1, length);
+
+      const view: View = this.levels.filter((level: LevelImpl) => level.getIdentifier() === identifier)[0];
+      if (!view) {
+        throw new Error('Level with identifier (' + identifier + ') not found!');
+      }
+      this.currentView = view;
+    } else {
+      throw new Error('EntryPoint option unknown!');
+    }
+  }
+
+  public getTile(identifier: string): Tile {
+    const tile: Tile = this.tiles.filter((t: Tile) => t.identifier === identifier)[0];
+    return tile;
+  }
+
+  public getWidth(): number {
+    return this.settings.numHorizontalTiles * this.settings.tileWidth;
+  }
+
+  public getHeight(): number {
+    return this.settings.numVerticalTiles * this.settings.tileHeight;
+  }
+
+  public getCurrentView(): View {
+    return this.currentView;
   }
 }

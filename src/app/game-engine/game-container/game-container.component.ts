@@ -15,8 +15,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private CONTAINER: HTMLCanvasElement;
   @Input() autoStart: boolean;
   @Input() gameActive: Observable<boolean>;
-  private horizontalPixels: number = 16 * 20;
-  private verticalPixels: number = 16 * 14;
+  private gameImpl: GameImpl;
 
   private subscriptions: Subscription[] = [];
 
@@ -38,16 +37,20 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit() {
     this.CONTAINER = <HTMLCanvasElement> document.getElementById('Container');
-    this.CONTAINER.width = this.horizontalPixels;
-    this.CONTAINER.height = this.verticalPixels;
     this.GAME_LOOP.setCanvas(<HTMLCanvasElement>this.CONTAINER);
 
     const gameParser: GameParser = new GameParser(this.definitionsFile);
-    gameParser.parse(this.http).subscribe((game: GameImpl) => console.log({'Parsed GameImpl': game}));
+    gameParser.parse(this.http).subscribe((game: GameImpl) => {
+      console.log({'Parsed GameImpl': game});
+      this.gameImpl = game;
 
-    if (this.autoStart) {
-      this.GAME_LOOP.start();
-    }
+      this.initializeCanvas();
+      this.GAME_LOOP.setGameImpl(this.gameImpl);
+
+      if (this.autoStart) {
+        this.GAME_LOOP.start();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -55,4 +58,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  private initializeCanvas(): void {
+    this.CONTAINER.width = this.gameImpl.getWidth();
+    this.CONTAINER.height = this.gameImpl.getHeight();
+  }
 }

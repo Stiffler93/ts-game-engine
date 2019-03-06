@@ -3,6 +3,7 @@ import {interval, Observable, Subscription} from 'rxjs';
 import {Error} from 'tslint/lib/error';
 import {GameEntitiesService} from './game-entities.service';
 import {Entity} from '../elements/Entity';
+import {GameImpl} from '../creation/model/Creation';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class GameLoopService {
   private renderer: Subscription;
   private CANVAS: HTMLCanvasElement;
   private CONTEXT: CanvasRenderingContext2D;
+  private GAME: GameImpl;
 
   constructor(private entities: GameEntitiesService) {
     this.frame = interval(1000 / 30);
@@ -25,13 +27,16 @@ export class GameLoopService {
     this.CONTEXT = canvas.getContext('2d');
   }
 
+  public setGameImpl(gameImpl: GameImpl): void {
+    this.GAME = gameImpl;
+  }
+
   public start(): void {
     if (!this.CONTEXT) {
       throw new Error('You cannot start the Game without specifying on which canvas it should be drawn!');
     }
 
     console.log('start()');
-    this.setupGame();
     this.resume();
   }
 
@@ -60,23 +65,20 @@ export class GameLoopService {
   public stop(): void {
     console.log('stop()');
     this.pause();
-    this.releaseResources();
   }
 
   private update(): void {
     this.CONTEXT.clearRect(0, 0, this.CANVAS.width, this.CANVAS.height);
 
     this.CONTEXT.beginPath();
-    this.entities.getAllEntities().forEach((entity: Entity) => entity.update());
-    this.entities.getAllEntities().forEach((entity: Entity) => entity.draw(this.CONTEXT));
+
+    if (this.GAME) {
+      this.GAME.getCurrentView().render(this.CONTEXT);
+    }
+    // this.entities.getAllEntities().forEach((entity: Entity) => entity.update());
+    // this.entities.getAllEntities().forEach((entity: Entity) => entity.draw(this.CONTEXT));
+
+
     this.CONTEXT.closePath();
-  }
-
-  private setupGame(): void {
-    console.log('setupGame()');
-  }
-
-  private releaseResources(): void {
-    console.log('releaseResources()');
   }
 }

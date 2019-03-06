@@ -13,5 +13,6 @@
   ],
   "levels": [
     "assets/game/levels/1/level.json"
-  ]
+  ],
+  "entryPoint": "LEVEL:1"
 }
