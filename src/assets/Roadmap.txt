@@ -1,0 +1,11 @@
+Roadmap
+
+	1) Create interfaces to access the values in Game.json
+	2) parse Game.json with http call and print the information
+	3) Create a Game Tree with all the parsed information
+	4) display the first level
+
+	5) Add an entity and display it
+	6) Control listeners for the entity for keyboard input
+	7) Collision detection for tiles and entities
+	8) Gravity to keep movable objects on the ground

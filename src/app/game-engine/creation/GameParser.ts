@@ -1,7 +1,7 @@
-import {from, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {flatMap} from 'rxjs/operators';
-import {Game, GameImpl} from './model/Creation';
+import {Game, GameImpl} from './model/Game';
 
 export class GameParser {
 

@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {interval, Observable, Subscription} from 'rxjs';
 import {Error} from 'tslint/lib/error';
 import {GameEntitiesService} from './game-entities.service';
-import {Entity} from '../elements/Entity';
-import {GameImpl} from '../creation/model/Creation';
+import {GameImpl} from '../creation/model/Game';
 
 @Injectable({
   providedIn: 'root'
@@ -75,9 +74,6 @@ export class GameLoopService {
     if (this.GAME) {
       this.GAME.getCurrentView().render(this.CONTEXT);
     }
-    // this.entities.getAllEntities().forEach((entity: Entity) => entity.update());
-    // this.entities.getAllEntities().forEach((entity: Entity) => entity.draw(this.CONTEXT));
-
 
     this.CONTEXT.closePath();
   }

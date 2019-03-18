@@ -3,7 +3,7 @@ import {GameLoopService} from '../controls/game-loop.service';
 import {Observable, Subscription} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {GameParser} from '../creation/GameParser';
-import {GameImpl} from '../creation/model/Creation';
+import {GameImpl} from '../creation/model/Game';
 
 @Component({
   selector: 'app-game-container',

@@ -6,6 +6,9 @@
   "entities": [
     "assets/game/entities/rect.json"
   ],
+  "sprites": [
+    {"id": "ninja", "img": "assets/game/sprites/ninja.png"}
+  ],
   "tiles": [
     "assets/game/tiles/Black.json",
     "assets/game/tiles/White.json",

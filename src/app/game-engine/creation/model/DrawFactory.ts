@@ -1,11 +1,9 @@
-import {Tile} from './Creation';
+import {Tile} from './Tile';
+import {EntityImpl} from './Entity';
 
-export namespace TileFactory {
+export namespace DrawFactory {
 
   export function drawTile(context: CanvasRenderingContext2D, tile: Tile, x: number, y: number): void {
-    if (!tile) {
-      return;
-    }
     const startX = x * tile.width;
     const startY = y * tile.height;
 
