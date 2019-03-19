@@ -1,11 +1,9 @@
 import {View} from '../../view/View';
-import {Tile} from './Tile';
-import {Entity, EntityImpl} from './Entity';
+import {TileImpl} from './Tile';
+import {EntityImpl} from './Entity';
 import {HttpClient} from '@angular/common/http';
 import {forkJoin, Observable, of} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
-import {Point} from '../../elements/util/Point';
-import {DrawFactory} from './DrawFactory';
 import {GameImpl} from './Game';
 
 export interface Level {
@@ -16,8 +14,8 @@ export interface Level {
 
 export class LevelImpl implements View {
 
-  private background: Tile[][] = [];
-  private foreground: Tile[][] = [];
+  private background: TileImpl[][] = [];
+  private foreground: TileImpl[][] = [];
   private entities: EntityImpl[] = [];
 
   constructor(private settings: Level, private gameImpl: GameImpl) {
@@ -34,7 +32,7 @@ export class LevelImpl implements View {
       );
   }
 
-  private loadTiles(http: HttpClient, file: string): Observable<Tile[][]> {
+  private loadTiles(http: HttpClient, file: string): Observable<TileImpl[][]> {
     return http.get(file, {responseType: 'text'}).pipe(
       map((defs: string) => defs.split('\n')),
       map((rows: string[]) => {
@@ -53,13 +51,14 @@ export class LevelImpl implements View {
           if (identifier === '#') {
             return undefined;
           }
-          const tile: Tile = this.gameImpl.getTile(identifier);
+          const tile: TileImpl = this.gameImpl.getTile(identifier);
           if (!tile) {
-            const entity: Entity = this.gameImpl.getEntity(identifier);
+            const entity: EntityImpl = this.gameImpl.getEntity(identifier);
             if (entity) {
               const tileWidth = this.gameImpl.getTileWidth();
               const tileHeight = this.gameImpl.getTileHeight();
-              this.entities.push(new EntityImpl(entity, new Point(X * tileWidth, Y * tileHeight)));
+              entity.moveTo(X * tileWidth, Y * tileHeight);
+              this.entities.push(entity);
             }
           }
 
@@ -74,17 +73,21 @@ export class LevelImpl implements View {
   }
 
   public render(context: CanvasRenderingContext2D): void {
-    this.background.forEach((row: Tile[], indexY: number) =>
-      row.forEach((tile: Tile, indexX: number) => {
+    this.background.forEach((row: TileImpl[], indexY: number) =>
+      row.forEach((tile: TileImpl, indexX: number) => {
         if (tile) {
-          DrawFactory.drawTile(context, tile, indexX, indexY);
+          const y = indexY * this.gameImpl.getTileHeight();
+          const x = indexX * this.gameImpl.getTileWidth();
+          tile.draw(context, x, y);
         }
       })
     );
-    this.foreground.forEach((row: Tile[], indexY: number) =>
-      row.forEach((tile: Tile, indexX: number) => {
+    this.foreground.forEach((row: TileImpl[], indexY: number) =>
+      row.forEach((tile: TileImpl, indexX: number) => {
         if (tile) {
-          DrawFactory.drawTile(context, tile, indexX, indexY);
+          const y = indexY * this.gameImpl.getTileHeight();
+          const x = indexX * this.gameImpl.getTileWidth();
+          tile.draw(context, x, y);
         }
       })
     );

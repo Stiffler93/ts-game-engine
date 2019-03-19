@@ -10,7 +10,13 @@ export interface Entity {
 
 export class EntityImpl {
 
-  constructor(private settings: Entity, private position: Point) {
+  private position: Point = new Point(-2934, -2390);
+
+  constructor(private settings: Entity) {
+  }
+
+  public getId(): string {
+    return this.settings.identifier;
   }
 
   public getWidth(): number {
@@ -23,6 +29,15 @@ export class EntityImpl {
 
   public getPosition(): Point {
     return this.position;
+  }
+
+  public move(x: number, y: number): void {
+    this.position.add(x, y);
+  }
+
+  public moveTo(x: number, y: number): void {
+    this.position.x = x;
+    this.position.y = y;
   }
 
   public draw(context: CanvasRenderingContext2D): void {

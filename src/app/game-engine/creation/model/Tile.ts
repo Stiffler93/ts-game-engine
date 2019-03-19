@@ -13,7 +13,12 @@ export class TileImpl {
   private sprite: ImageBitmap;
 
   constructor(private settings: Tile, private gameImpl: GameImpl) {
-    this.sprite = this.gameImpl.getSprite(settings.sprite).getImage();
+    if (settings.sprite !== 'none' && settings.sprite !== '') {
+      const spr = this.gameImpl.getSprite(settings.sprite);
+      if (spr) {
+        this.sprite = spr.getImage();
+      }
+    }
   }
 
   public draw(context: CanvasRenderingContext2D, x: number, y: number): void {
@@ -31,5 +36,9 @@ export class TileImpl {
     }
 
     context.closePath();
+  }
+
+  public getId(): string {
+    return this.settings.identifier;
   }
 }
